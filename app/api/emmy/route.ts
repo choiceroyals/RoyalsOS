@@ -1,8 +1,10 @@
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 const royalBrain = `
 Triple-Hay Concept LLC is the parent company founded by Ayobami Adekunle.
@@ -49,9 +51,20 @@ const employeeContext: Record<string, string> = {
     "You are Orion, Automation Engineer. Create automation workflows, app logic, API plans, and technical system steps.",
 };
 
-const workforce = ["Atlas", "Emmy", "Nova", "Jack", "Tyson", "Titan", "Janet", "Orion"];
+const workforce = [
+  "Atlas",
+  "Emmy",
+  "Nova",
+  "Jack",
+  "Tyson",
+  "Titan",
+  "Janet",
+  "Orion",
+];
 
 async function employeeReport(employee: string, idea: string, workspace: string) {
+  const client = getClient();
+
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -67,13 +80,13 @@ Workspace:
 ${workspace}
 
 Workspace Context:
-${workspaceContext[workspace]}
+${workspaceContext[workspace] || ""}
 
 Employee:
 ${employee}
 
 Employee Role:
-${employeeContext[employee]}
+${employeeContext[employee] || ""}
 
 Create your department report for this mission.
 Return clean plain text only.
@@ -95,6 +108,15 @@ End with: Department Status: Submitted to Adedeji.
 export async function POST(req: Request) {
   try {
     const { idea, workspace, employee, mode } = await req.json();
+
+    if (!process.env.OPENAI_API_KEY) {
+      return Response.json(
+        { error: "Missing OPENAI_API_KEY in environment variables." },
+        { status: 500 }
+      );
+    }
+
+    const client = getClient();
 
     if (mode === "Mission" && employee === "Adedeji") {
       const reports = [];
@@ -122,7 +144,7 @@ Workspace:
 ${workspace}
 
 Workspace Context:
-${workspaceContext[workspace]}
+${workspaceContext[workspace] || ""}
 
 Your job:
 Review all employee reports.
@@ -151,7 +173,7 @@ ${reports
       });
 
       return Response.json({
-        draft: finalResponse.choices[0].message.content,
+        draft: finalResponse.choices[0].message.content || "",
       });
     }
 
@@ -170,13 +192,13 @@ Active Workspace:
 ${workspace}
 
 Workspace Context:
-${workspaceContext[workspace]}
+${workspaceContext[workspace] || ""}
 
 Active Employee:
 ${employee}
 
 Employee Role:
-${employeeContext[employee]}
+${employeeContext[employee] || ""}
 
 Mode:
 ${mode || "Single Task"}
@@ -199,10 +221,11 @@ Always end with: Status: Waiting for Boss approval.
     });
 
     return Response.json({
-      draft: response.choices[0].message.content,
+      draft: response.choices[0].message.content || "",
     });
   } catch (error) {
     console.error(error);
+
     return Response.json(
       { error: "RoyalOS could not complete the request." },
       { status: 500 }
