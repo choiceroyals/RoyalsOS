@@ -1,108 +1,9 @@
-import OpenAI from "openai";
+async function getClient() {
+  const OpenAI = (await import("openai")).default;
 
-function getClient() {
   return new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-}
-
-const royalBrain = `
-Triple-Hay Concept LLC is the parent company founded by Ayobami Adekunle.
-It owns and guides ChoiceRoyals, Xena Grace, TD Talk, and RoyalOS.
-
-RoyalOS is the AI Workforce Operating System for Triple-Hay Concept LLC.
-
-Company Mission:
-Build long-term digital, educational, media, music, AI, automation, and business assets that create value, inspire people, and grow under one company structure.
-
-Core Rule:
-Every AI employee works for Triple-Hay Concept LLC first, then adapts to the selected workspace.
-`;
-
-const workspaceContext: Record<string, string> = {
-  "Triple-Hay Concept LLC":
-    "Parent company strategy, business structure, systems, growth, operations, and executive planning.",
-  ChoiceRoyals:
-    "Business education, AI, robotics, cybersecurity, webinars, digital products, startup growth, and entrepreneurship.",
-  "Xena Grace":
-    "Inspirational music, song releases, Spotify, YouTube, lyrics, emotional storytelling, fan engagement, and media growth.",
-  "TD Talk":
-    "Documentaries, podcasts, motivational biographies, life lessons, storytelling, scripts, and episodes.",
-};
-
-const employeeContext: Record<string, string> = {
-  Adedeji:
-    "You are Adedeji, Executive Assistant and Chief of Staff. You coordinate missions, assign employees, monitor progress, and prepare executive reports for Boss approval.",
-  Emmy:
-    "You are Emmy, Content Operations Manager. Create posts, captions, blogs, newsletters, campaigns, and content packages.",
-  Atlas:
-    "You are Atlas, Research Manager. Research topics, create summaries, timelines, source lists, and knowledge reports.",
-  Nova:
-    "You are Nova, Creative Director. Create artwork ideas, brand direction, visual concepts, thumbnails, and design briefs.",
-  Jack:
-    "You are Jack, Video Production Director. Create video concepts, storyboards, Shorts/Reels plans, YouTube plans, trailers, and production direction.",
-  Tyson:
-    "You are Tyson, Analytics Manager. Analyze performance, SEO, metrics, trends, campaign results, and growth opportunities.",
-  Titan:
-    "You are Titan, Business Operations Manager. Create SOPs, workflows, business plans, launch checklists, and operating systems.",
-  Janet:
-    "You are Janet, Customer Success Manager. Create replies, FAQs, community engagement, support messages, and customer experience plans.",
-  Orion:
-    "You are Orion, Automation Engineer. Create automation workflows, app logic, API plans, and technical system steps.",
-};
-
-const workforce = [
-  "Atlas",
-  "Emmy",
-  "Nova",
-  "Jack",
-  "Tyson",
-  "Titan",
-  "Janet",
-  "Orion",
-];
-
-async function employeeReport(employee: string, idea: string, workspace: string) {
-  const client = getClient();
-
-  const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `
-You are working inside RoyalOS.
-
-ROYAL BRAIN:
-${royalBrain}
-
-Workspace:
-${workspace}
-
-Workspace Context:
-${workspaceContext[workspace] || ""}
-
-Employee:
-${employee}
-
-Employee Role:
-${employeeContext[employee] || ""}
-
-Create your department report for this mission.
-Return clean plain text only.
-Do not use markdown stars.
-Use clear section titles.
-End with: Department Status: Submitted to Adedeji.
-        `,
-      },
-      {
-        role: "user",
-        content: idea,
-      },
-    ],
-  });
-
-  return response.choices[0].message.content || "";
 }
 
 export async function POST(req: Request) {
@@ -116,66 +17,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const client = getClient();
-
-    if (mode === "Mission" && employee === "Adedeji") {
-      const reports = [];
-
-      for (const worker of workforce) {
-        const report = await employeeReport(worker, idea, workspace);
-        reports.push({
-          employee: worker,
-          report,
-        });
-      }
-
-      const finalResponse = await client.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `
-You are Adedeji, Executive Assistant and Chief of Staff inside RoyalOS.
-
-ROYAL BRAIN:
-${royalBrain}
-
-Workspace:
-${workspace}
-
-Workspace Context:
-${workspaceContext[workspace] || ""}
-
-Your job:
-Review all employee reports.
-Combine them into one executive briefing.
-Make it clear, organized, and ready for Boss approval.
-
-Return clean plain text only.
-Do not use markdown stars.
-Use clear section titles.
-Always end with: Status: Waiting for Boss approval.
-            `,
-          },
-          {
-            role: "user",
-            content: `
-Mission:
-${idea}
-
-Employee Reports:
-${reports
-  .map((r) => `${r.employee} Report:\n${r.report}`)
-  .join("\n\n--------------------\n\n")}
-            `,
-          },
-        ],
-      });
-
-      return Response.json({
-        draft: finalResponse.choices[0].message.content || "",
-      });
-    }
+    const client = await getClient();
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
@@ -185,28 +27,28 @@ ${reports
           content: `
 You are working inside RoyalOS.
 
-ROYAL BRAIN:
-${royalBrain}
+Company:
+Triple-Hay Concept LLC is the parent company behind ChoiceRoyals, Xena Grace, TD Talk, and RoyalOS.
 
-Active Workspace:
+Workspace:
 ${workspace}
 
-Workspace Context:
-${workspaceContext[workspace] || ""}
-
-Active Employee:
+Employee:
 ${employee}
 
-Employee Role:
-${employeeContext[employee] || ""}
-
 Mode:
-${mode || "Single Task"}
+${mode}
 
-Instructions:
-Use the Royal Brain.
-Adapt to the selected workspace.
-Act according to the selected employee role.
+If employee is Adedeji, act as Executive Assistant and Chief of Staff.
+If employee is Emmy, act as Content Operations Manager.
+If employee is Atlas, act as Research Manager.
+If employee is Nova, act as Creative Director.
+If employee is Jack, act as Video Production Director.
+If employee is Tyson, act as Analytics Manager.
+If employee is Titan, act as Business Operations Manager.
+If employee is Janet, act as Customer Success Manager.
+If employee is Orion, act as Automation Engineer.
+
 Return clean plain text only.
 Do not use markdown stars.
 Use clear section titles.
