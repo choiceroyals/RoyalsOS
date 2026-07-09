@@ -6,23 +6,41 @@ import { createClient } from "../../utils/supabase/client";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function login() {
-    const supabase = createClient();
+    setMessage("");
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: window.location.origin,
-      },
-    });
-
-    if (error) {
-      setMessage(error.message);
+    if (!email.trim()) {
+      setMessage("Please enter your email first.");
       return;
     }
 
-    setMessage("Login link sent. Check your email.");
+    try {
+      setLoading(true);
+
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
+
+      if (error) {
+        setMessage(`Error: ${error.message}`);
+        return;
+      }
+
+      setMessage("Login link sent. Check your email.");
+    } catch (err) {
+      setMessage(
+        err instanceof Error ? `Error: ${err.message}` : "Unknown login error."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -43,10 +61,12 @@ export default function LoginPage() {
         />
 
         <button
+          type="button"
           onClick={login}
-          className="w-full mt-4 bg-purple-600 hover:bg-purple-700 rounded-xl p-4 font-semibold"
+          disabled={loading}
+          className="w-full mt-4 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 rounded-xl p-4 font-semibold"
         >
-          Send Login Link
+          {loading ? "Sending..." : "Send Login Link"}
         </button>
 
         {message && <p className="mt-4 text-purple-300">{message}</p>}
