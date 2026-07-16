@@ -1,0 +1,92 @@
+[
+  {
+    "id": "08def528-f8ce-47d3-aa2b-025f6dbe19b1",
+    "name": "01 Income",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "7a5eb8df-a3d6-43e7-9d0c-1d90b1963f4f",
+    "name": "02 Expenses",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "aa7a61a8-3eec-472a-8149-50a785ee1d64",
+    "name": "03 Receipts",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "79441f3b-752b-4336-9879-68a80b7e07b1",
+    "name": "04 Invoices",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "07c31f9e-48c7-4cff-b8ac-0dc58d2b2f08",
+    "name": "05 Banking",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "e3156ee8-c9da-4dbc-8080-4af9a665165d",
+    "name": "06 Contracts",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "f614564f-2b3e-4061-b14f-c00482071d2a",
+    "name": "07 Taxes",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "4ba25680-5600-44af-8e84-f1a59f89739d",
+    "name": "08 Reports",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  },
+  {
+    "id": "008bcbfb-f8b1-415b-9a1b-1568a46c6944",
+    "name": "09 Audit History",
+    "type": "folder",
+    "parentId": null,
+    "tags": [],
+    "status": "active",
+    "createdAt": "2026-07-16T03:09:23.634Z",
+    "updatedAt": "2026-07-16T03:09:23.634Z"
+  }
+]

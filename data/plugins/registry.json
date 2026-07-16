@@ -1,0 +1,458 @@
+[
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.security-foundation",
+      "name": "Security Operations Pack",
+      "version": "1.0.0",
+      "description": "Adds security monitoring capabilities, incident workflows, evidence collection, recurring health checks, and Sentinel task routing.",
+      "author": "RoyalOS",
+      "category": "Security",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "security:read",
+        "security:write",
+        "messages:write",
+        "missions:write",
+        "scheduler:jobs"
+      ],
+      "capabilities": [
+        "Security health scan",
+        "Incident intake",
+        "Evidence records",
+        "Sentinel routing",
+        "Scheduled security reports"
+      ],
+      "assignedEmployees": [
+        "Sentinel",
+        "Orion",
+        "Adedeji"
+      ],
+      "actions": [
+        {
+          "id": "run-security-review",
+          "label": "Run security review",
+          "description": "Ask Sentinel to inspect current security information and return findings and recommendations.",
+          "kind": "report",
+          "employee": "Sentinel",
+          "promptTemplate": "Run a RoyalOS security review for the following scope. Identify evidence, risks, priorities, and safe next actions. Do not make destructive changes. Scope: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "security",
+        "siem",
+        "incident-response"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.advanced-authentication",
+      "name": "Advanced Login & Identity Pack",
+      "version": "1.0.0",
+      "description": "Adds stronger login policy configuration, MFA readiness checks, session visibility, role-based access templates, and identity audit events.",
+      "author": "RoyalOS",
+      "category": "Authentication",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "security:read",
+        "security:write",
+        "integrations:read"
+      ],
+      "capabilities": [
+        "MFA readiness",
+        "Session review",
+        "Role templates",
+        "Login audit trail",
+        "Access review reports"
+      ],
+      "assignedEmployees": [
+        "Sentinel",
+        "Orion"
+      ],
+      "actions": [
+        {
+          "id": "review-login-readiness",
+          "label": "Review login readiness",
+          "description": "Prepare an identity, MFA, session, and role-readiness report.",
+          "kind": "report",
+          "employee": "Sentinel",
+          "promptTemplate": "Review login and identity readiness for this RoyalOS scope. Check MFA, sessions, roles, auditability, and least privilege. Return gaps and a prioritized remediation plan. Scope: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "login",
+        "mfa",
+        "identity"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.bookkeeping-drive",
+      "name": "Bookkeeping & Records Pack",
+      "version": "1.0.0",
+      "description": "Adds the Michael P filing workspace, bookkeeping folders, document intake, record organization, review queues, and audit-ready company files.",
+      "author": "RoyalOS",
+      "category": "Bookkeeping",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "records:read",
+        "records:write",
+        "assets:read",
+        "assets:write",
+        "missions:write"
+      ],
+      "capabilities": [
+        "Drive-style records",
+        "Folder creation",
+        "Editable documents",
+        "Receipt intake",
+        "Version history",
+        "Recoverable trash"
+      ],
+      "assignedEmployees": [
+        "Michael P",
+        "Adedeji"
+      ],
+      "actions": [
+        {
+          "id": "organize-records",
+          "label": "Organize records plan",
+          "description": "Ask Michael P to create a filing, review, and reconciliation plan.",
+          "kind": "workflow",
+          "employee": "Michael P",
+          "promptTemplate": "Prepare a bookkeeping and records organization plan for the following request. Include folders, required evidence, review controls, and a completion checklist. Request: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "bookkeeping",
+        "records",
+        "files"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.media-production",
+      "name": "Media Production Pack",
+      "version": "1.0.0",
+      "description": "Adds provider-aware media production capabilities for Cine, Nova, Jack, and Emmy, including asset handoff and approval-controlled production workflows.",
+      "author": "RoyalOS",
+      "category": "Media",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "assets:read",
+        "assets:write",
+        "missions:read",
+        "missions:write",
+        "integrations:read"
+      ],
+      "capabilities": [
+        "Reference-image generation",
+        "Video production routing",
+        "Voice production",
+        "Asset handoff",
+        "Publishing preparation"
+      ],
+      "assignedEmployees": [
+        "Cine",
+        "Nova",
+        "Jack",
+        "Emmy"
+      ],
+      "requiredEnvironment": [
+        "OPENAI_API_KEY"
+      ],
+      "actions": [
+        {
+          "id": "create-media-plan",
+          "label": "Create media plan",
+          "description": "Route a production brief through Cine and return a provider-aware plan.",
+          "kind": "workflow",
+          "employee": "Cine",
+          "promptTemplate": "Create a cost-aware media production plan for this request. Include assets, scenes, narration, providers, approval gates, and final deliverables. Request: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "video",
+        "image",
+        "audio"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.social-publishing",
+      "name": "Social Publishing Pack",
+      "version": "1.0.0",
+      "description": "Adds approval-controlled social publishing workflows, channel readiness checks, campaign handoffs, and publishing status reports.",
+      "author": "RoyalOS",
+      "category": "Publishing",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "integrations:read",
+        "integrations:write",
+        "messages:write",
+        "missions:write",
+        "scheduler:jobs"
+      ],
+      "capabilities": [
+        "Publishing queue",
+        "Channel readiness",
+        "Approval routing",
+        "Scheduled handoff",
+        "Publishing report"
+      ],
+      "assignedEmployees": [
+        "Emmy",
+        "Adedeji",
+        "Janet"
+      ],
+      "actions": [
+        {
+          "id": "prepare-publishing-plan",
+          "label": "Prepare publishing plan",
+          "description": "Ask Emmy to prepare channel-specific copy, timing, approvals, and reporting.",
+          "kind": "workflow",
+          "employee": "Emmy",
+          "promptTemplate": "Prepare an approval-controlled social publishing plan for the following campaign. Include channels, copy variants, schedule, assets, hashtags, success metrics, and risks. Campaign: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "social",
+        "publishing",
+        "marketing"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.authentication-pro",
+      "name": "Authentication Pro",
+      "version": "1.0.0",
+      "description": "Official RoyalOS authentication capability pack for Supabase-backed email login, magic links, Google and Microsoft OAuth readiness, MFA policy review, session controls, role templates, and identity audit workflows.",
+      "author": "RoyalOS",
+      "category": "Authentication",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "security:read",
+        "security:write",
+        "integrations:read",
+        "integrations:write"
+      ],
+      "capabilities": [
+        "Email and magic-link readiness",
+        "Google OAuth readiness",
+        "Microsoft OAuth readiness",
+        "MFA enrollment policy",
+        "Session review",
+        "Role and access templates",
+        "Identity audit reports"
+      ],
+      "assignedEmployees": [
+        "Sentinel",
+        "Orion",
+        "Adedeji"
+      ],
+      "requiredEnvironment": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      ],
+      "actions": [
+        {
+          "id": "authentication-readiness-audit",
+          "label": "Audit authentication setup",
+          "description": "Run a non-destructive authentication, MFA, session, and role readiness audit.",
+          "kind": "report",
+          "employee": "Sentinel",
+          "promptTemplate": "Audit RoyalOS authentication readiness for the following deployment. Check Supabase Auth configuration, OAuth callbacks, MFA enrollment and challenge flows, sessions, roles, least privilege, recovery, audit events, and production risks. Return a prioritized remediation report. Deployment notes: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "authentication",
+        "supabase",
+        "oauth",
+        "mfa",
+        "sessions",
+        "free"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.backup-foundation",
+      "name": "Backup & Recovery Foundation",
+      "version": "1.0.0",
+      "description": "Free official backup planning pack for restore points, scheduled export checks, recovery testing, retention policy, and encrypted cloud-storage readiness.",
+      "author": "RoyalOS",
+      "category": "Productivity",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "records:read",
+        "assets:read",
+        "security:read",
+        "scheduler:jobs"
+      ],
+      "capabilities": [
+        "Backup inventory",
+        "Restore-point plan",
+        "Retention policy",
+        "Recovery drill",
+        "Cloud storage readiness"
+      ],
+      "assignedEmployees": [
+        "Orion",
+        "Sentinel",
+        "Michael P"
+      ],
+      "actions": [
+        {
+          "id": "prepare-backup-plan",
+          "label": "Prepare backup plan",
+          "kind": "report",
+          "employee": "Orion",
+          "promptTemplate": "Prepare a safe RoyalOS backup and recovery plan for this scope. Include source files, database, assets, environment secrets handling, frequency, retention, restore testing, and rollback steps. Scope: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "backup",
+        "recovery",
+        "business-continuity",
+        "free"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  },
+  {
+    "manifest": {
+      "schemaVersion": 1,
+      "id": "royalos.notifications-foundation",
+      "name": "Notifications & Employee Receipts",
+      "version": "1.0.0",
+      "description": "Free official communication pack for employee receipt acknowledgements, task acceptance, progress notices, completion reports, and future email or messaging provider adapters.",
+      "author": "RoyalOS",
+      "category": "Productivity",
+      "royalosVersion": ">=3.0.0",
+      "permissions": [
+        "messages:read",
+        "messages:write",
+        "missions:read",
+        "missions:write",
+        "scheduler:jobs"
+      ],
+      "capabilities": [
+        "Message receipt acknowledgement",
+        "Task acceptance",
+        "Progress updates",
+        "Completion reports",
+        "Escalation notices"
+      ],
+      "assignedEmployees": [
+        "Adedeji",
+        "Janet",
+        "Orion"
+      ],
+      "actions": [
+        {
+          "id": "review-notification-workflow",
+          "label": "Review notification workflow",
+          "kind": "workflow",
+          "employee": "Adedeji",
+          "promptTemplate": "Review and improve the employee communication workflow for this request. Define receipt confirmation, task acceptance, progress updates, escalation, completion output, and CEO report. Request: {{input}}",
+          "approvalRequired": false
+        }
+      ],
+      "tags": [
+        "notifications",
+        "messages",
+        "employees",
+        "free"
+      ]
+    },
+    "enabled": true,
+    "source": "marketplace",
+    "installedAt": "2026-07-16T02:46:26.524Z",
+    "updatedAt": "2026-07-16T02:46:26.524Z",
+    "lastHealthCheck": {
+      "status": "healthy",
+      "message": "Manifest, permissions, and required configuration passed the health check.",
+      "checkedAt": "2026-07-16T03:08:43.534Z"
+    }
+  }
+]

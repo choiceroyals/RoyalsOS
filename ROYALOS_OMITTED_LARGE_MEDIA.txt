@@ -1,0 +1,12 @@
+RoyalOS Orion Local Developer Edition — Omitted Local Media
+Updated: 2026-07-14
+
+This transfer package excludes unrelated large media, generated runtime PDFs, and local-only assets that were not part of the source package.
+
+After extraction, copy any custom avatars you keep locally into `public/avatars/`, including when needed:
+
+- `public/avatars/cine.jpg`
+- `public/avatars/michael-p.jpg`
+- `public/avatars/orion.jpg`
+
+The package preserves the source avatars that were present in the latest project ZIP.

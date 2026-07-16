@@ -1,0 +1,31 @@
+ROYALOS CORE OPERATIONS PACK — INSTALLATION
+
+1. Stop the current RoyalOS server with Ctrl + C.
+2. Back up the current working royalos-app folder.
+3. Extract this ZIP into a NEW empty royalos-app folder.
+4. Copy your private .env.local from your backup into the new folder.
+5. Copy any local avatar files that are not included in the source package, such as:
+   public\avatars\cine.jpg
+   public\avatars\michael-p.jpg
+   public\avatars\orion.jpg
+6. Open Command Prompt in the new royalos-app folder.
+7. Run:
+
+   npm install
+   npm run dev
+
+8. Open http://localhost:3000
+9. Test these left-navigation modules:
+   Workspaces
+   Missions
+   Approvals
+   Knowledge
+   Memory
+   Messages
+   Analytics
+   Settings
+
+Important:
+- Do not place .env.local or real API keys inside a ZIP you upload or share.
+- The Core Operations pages currently save prototype data in browser localStorage.
+- The included Supabase migration is review-first. Do not apply it until authentication, organization membership, and RLS policies are reviewed.

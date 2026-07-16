@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "example.business-research",
+  "name": "Business Research Starter",
+  "version": "1.0.0",
+  "description": "A safe example RoyalOS plugin that adds an Atlas-powered business research workflow without modifying RoyalOS source files.",
+  "author": "RoyalOS Example",
+  "category": "Productivity",
+  "royalosVersion": ">=3.0.0",
+  "permissions": [
+    "knowledge:read",
+    "missions:write"
+  ],
+  "capabilities": [
+    "Business opportunity research",
+    "Competitor briefing",
+    "Research report generation"
+  ],
+  "assignedEmployees": [
+    "Atlas"
+  ],
+  "actions": [
+    {
+      "id": "research-business-topic",
+      "label": "Research business topic",
+      "description": "Ask Atlas to investigate a business topic and return a structured executive report.",
+      "kind": "report",
+      "employee": "Atlas",
+      "promptTemplate": "Research the following business topic for the selected company. Return an executive summary, evidence, opportunities, risks, competitors, and recommended next actions. Topic: {{input}}",
+      "approvalRequired": false
+    }
+  ],
+  "tags": [
+    "research",
+    "atlas",
+    "business"
+  ]
+}

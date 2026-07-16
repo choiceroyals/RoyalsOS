@@ -1,0 +1,21 @@
+ROYALOS SYSTEM CARE FULL UPDATE
+
+1. Stop the current server with Ctrl + C.
+2. Back up your current royalos-app folder.
+3. Extract this ZIP into a new empty royalos-app folder.
+4. Copy your private .env.local into the new folder.
+5. The package already includes the logos and avatars from the uploaded project.
+6. Run:
+
+   npm install
+   npm run dev
+
+7. Open RoyalOS and click "System Care Active" at the top or "System Care" in the sidebar.
+8. Click "Create restore point" before the next major upgrade.
+9. Click "Run quick scan".
+10. Use "Assign issue to Orion" for code problems and "Assign security review to Sentinel" for suspicious or security-related issues.
+
+IMPORTANT
+- Do not upload or commit .env.local.
+- System Care repair actions are local-only by default.
+- This package does not include node_modules or .next.

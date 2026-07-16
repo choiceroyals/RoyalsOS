@@ -1,0 +1,684 @@
+.center {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero,
+.card,
+.notice,
+.metrics article {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, rgba(17, 24, 36, 0.98), rgba(8, 13, 21, 0.98));
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: flex-end;
+  padding: 22px;
+  border-radius: 17px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #e7bd63;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero h1,
+.card h2,
+.connectionCard h3,
+.modal h2 {
+  margin: 0;
+}
+
+.hero h1 {
+  font-size: 27px;
+}
+
+.hero p,
+.cardHeader p,
+.connectionCard p,
+.queueItem p,
+.activityItem p,
+.modal p {
+  color: #96a2b5;
+  line-height: 1.55;
+}
+
+.hero p {
+  max-width: 780px;
+  margin: 7px 0 0;
+  font-size: 12px;
+}
+
+.workspaceControl {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.workspaceControl span,
+.draftForm label > span {
+  color: #aab4c4;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.workspaceControl select,
+.draftForm input,
+.draftForm textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  outline: none;
+  color: #f4f6f9;
+  background: rgba(5, 10, 17, 0.82);
+}
+
+.workspaceControl select,
+.draftForm input {
+  height: 42px;
+  padding: 0 11px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metrics article {
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 14px;
+}
+
+.metrics strong {
+  color: #f3ca72;
+  font-size: 26px;
+}
+
+.metrics span {
+  color: #9aa6b7;
+  font-size: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 7px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  background: rgba(9, 14, 22, 0.92);
+  overflow-x: auto;
+}
+
+.tabs button {
+  min-height: 38px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #9ea9b8;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.tabs button:hover,
+.tabs .tabActive {
+  color: #161108;
+  border-color: rgba(238, 198, 102, 0.5);
+  background: linear-gradient(135deg, #d8aa47, #f2d17d);
+}
+
+.sectionStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 13px 15px;
+  border-radius: 12px;
+  color: #d8e0eb;
+  font-size: 10px;
+}
+
+.notice strong {
+  color: #f0ca75;
+}
+
+.notice span {
+  color: #9da8b8;
+  line-height: 1.5;
+}
+
+.card {
+  min-width: 0;
+  padding: 18px;
+  border-radius: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.cardHeader p {
+  margin: 5px 0 0;
+  font-size: 10px;
+}
+
+.connectionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.connectionCard {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.connectionTop,
+.queueItemTop,
+.modalHeader,
+.modalHeader > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.providerIcon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.connectionStatus {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.connected {
+  color: #6ee29b;
+  background: rgba(54, 189, 102, 0.12);
+}
+
+.credentials_ready {
+  color: #7fc6ff;
+  background: rgba(49, 139, 207, 0.13);
+}
+
+.not_configured,
+.needs_attention {
+  color: #efc26a;
+  background: rgba(214, 156, 44, 0.13);
+}
+
+.planned {
+  color: #b5bfce;
+  background: rgba(143, 152, 167, 0.12);
+}
+
+.connectionCard h3 {
+  font-size: 13px;
+}
+
+.connectionCard p {
+  min-height: 43px;
+  margin: 0;
+  font-size: 9px;
+}
+
+.capabilities,
+.channelRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.capabilities span,
+.channelRow span {
+  padding: 4px 6px;
+  border-radius: 999px;
+  color: #b9c4d3;
+  font-size: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.employeeLine {
+  min-height: 34px;
+  color: #8f9aac;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.employeeLine b {
+  color: #d7dde7;
+}
+
+.connectionCard button,
+.queueActions button,
+.draftForm > button,
+.closeButton {
+  min-height: 37px;
+  border: 1px solid rgba(237, 196, 98, 0.25);
+  border-radius: 9px;
+  color: #e8c66f;
+  background: rgba(213, 166, 57, 0.08);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.connectionCard button {
+  width: 100%;
+  margin-top: auto;
+}
+
+.connectionCard button:hover,
+.queueActions button:hover,
+.draftForm > button:hover,
+.closeButton:hover {
+  color: #171107;
+  background: linear-gradient(135deg, #d8aa47, #f2d17d);
+}
+
+.connectionCard button:disabled,
+.queueActions button:disabled,
+.draftForm > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.loading,
+.error,
+.emptyState {
+  padding: 14px;
+  border-radius: 11px;
+  color: #aab5c4;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.error {
+  color: #ffacb6;
+  border: 1px solid rgba(240, 78, 96, 0.22);
+  background: rgba(184, 38, 55, 0.1);
+}
+
+.publishingLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
+  gap: 16px;
+}
+
+.queueMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.queueMetrics span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  color: #9ba7b8;
+  font-size: 8px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.queueMetrics b {
+  color: #f1cb76;
+  font-size: 17px;
+}
+
+.queueList,
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.queueItem {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.queueItemTop > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.queueItemTop strong {
+  color: #f4f6fa;
+  font-size: 11px;
+}
+
+.queueItemTop span,
+.queueItem small,
+.activityItem small {
+  color: #7f8b9d;
+  font-size: 8px;
+}
+
+.queueItemTop i {
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #e8c66f;
+  font-size: 8px;
+  font-style: normal;
+  text-transform: capitalize;
+  background: rgba(214, 166, 57, 0.1);
+}
+
+.queueItem p {
+  margin: 9px 0;
+  font-size: 9px;
+}
+
+.queueActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.queueActions button {
+  min-height: 31px;
+  padding: 0 10px;
+}
+
+.draftForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.draftForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.draftForm textarea {
+  min-height: 160px;
+  padding: 11px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.channelPicker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.channelPicker label {
+  min-height: 36px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  color: #bcc6d3;
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.channelPicker input {
+  accent-color: #e2b655;
+}
+
+.permissionTableWrap {
+  overflow-x: auto;
+}
+
+.permissionTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+}
+
+.permissionTable th,
+.permissionTable td {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: left;
+  vertical-align: top;
+  color: #aab4c3;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.permissionTable th {
+  color: #e9c46f;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.permissionTable td:first-child {
+  min-width: 130px;
+}
+
+.permissionTable td:first-child strong,
+.permissionTable td:first-child span {
+  display: block;
+}
+
+.permissionTable td:first-child strong {
+  color: #f3f5f8;
+}
+
+.permissionTable td:first-child span {
+  margin-top: 3px;
+  color: #7f8a9b;
+  font-size: 8px;
+}
+
+.activityItem {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.022);
+}
+
+.activityDot {
+  width: 8px;
+  height: 8px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #8d98a8;
+}
+
+.activityDot.success {
+  background: #4fd583;
+}
+
+.activityDot.attention {
+  background: #e5ad43;
+}
+
+.activityDot.information {
+  background: #5aa8e8;
+}
+
+.activityItem strong {
+  color: #eef1f5;
+  font-size: 10px;
+}
+
+.activityItem p {
+  margin: 4px 0;
+  font-size: 9px;
+}
+
+.modalBackdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 5, 9, 0.76);
+  backdrop-filter: blur(8px);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid rgba(237, 196, 98, 0.22);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #141b28, #090e16);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+}
+
+.modalHeader > div {
+  justify-content: flex-start;
+}
+
+.modalHeader p {
+  margin: 3px 0 0;
+  font-size: 9px;
+}
+
+.modalHeader > button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: #dce2eb;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 20px;
+}
+
+.modal > p {
+  margin: 16px 0;
+  font-size: 10px;
+}
+
+.environmentList,
+.callbackBox,
+.safetyBox {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 11px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.environmentList strong,
+.callbackBox strong,
+.safetyBox strong {
+  color: #e8c66f;
+  font-size: 9px;
+}
+
+.environmentList code,
+.callbackBox code {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  padding: 5px 7px;
+  border-radius: 6px;
+  color: #c9d5e4;
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.safetyBox span {
+  color: #aab5c4;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.closeButton {
+  width: 100%;
+  margin-top: 14px;
+}
+
+@media (max-width: 1180px) {
+  .connectionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .publishingLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workspaceControl {
+    min-width: 0;
+  }
+
+  .metrics,
+  .queueMetrics,
+  .connectionGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .channelPicker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

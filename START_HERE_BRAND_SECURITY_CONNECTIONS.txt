@@ -1,0 +1,28 @@
+ROYALOS FULL BRAND, SECURITY, EMPLOYEE & CONNECTIONS PACK
+=======================================================
+
+SAFE INSTALLATION
+
+1. Stop the old development server with Ctrl+C.
+2. Back up your current working royalos-app folder.
+3. Extract this ZIP into a NEW EMPTY royalos-app folder.
+4. Copy your private .env.local from the old folder into the new folder.
+5. Compare .env.local with .env.example and add only the providers you are ready to configure.
+6. Keep every real key, token, password, refresh token, and secret out of Git and chat.
+7. In Supabase SQL Editor, review and apply:
+   supabase/migrations/20260715_brand_identity_security_foundation.sql
+8. Run:
+   npm install
+   npm run dev
+9. Open http://localhost:3000
+
+PRODUCTION CONNECTION REQUIREMENTS
+
+- Set ROYALOS_PUBLIC_URL to the public HTTPS RoyalOS URL.
+- Generate ROYALOS_CREDENTIAL_ENCRYPTION_KEY.
+- Set ROYALOS_SECURITY_INGEST_SECRET before accepting external security events.
+- Register exact OAuth callback URLs from ROYALOS_API_AND_CONNECTION_SETUP.md.
+- Authorize each brand account separately.
+
+DO NOT COPY .env.example OVER YOUR EXISTING .env.local.
+Use .env.example only as a checklist.

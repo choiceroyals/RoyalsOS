@@ -1,0 +1,23 @@
+RoyalOS V3 Plugin Platform verification
+Date: 2026-07-15
+
+PASS  npx tsc --noEmit
+PASS  npm run lint (0 errors; 19 non-blocking existing warnings)
+PASS  npm run build
+PASS  Next.js generated the Plugin Marketplace routes:
+      /api/plugins
+      /api/plugins/upload
+      /api/plugins/action
+PASS  Production homepage responded successfully during smoke testing.
+PASS  Plugin overview seeded 5 official capability packs.
+PASS  Example plugin ZIP uploaded and registered successfully.
+PASS  Uploaded plugin enable, disable, and uninstall actions succeeded.
+PASS  Michael P Records API created the 9 standard bookkeeping folders.
+PASS  No .env.local or detected provider secrets are included in the transfer package.
+
+Known non-blocking warning:
+- Turbopack warns that a filesystem trace related to company PDF records may trace more of the project than intended. Compilation and production build still complete successfully.
+
+Security boundary:
+- Uploaded RoyalOS V3 plugins are declarative packages. They cannot contain executable JavaScript, TypeScript, PHP, Python, shell scripts, or terminal commands.
+- External plugin actions are HTTPS-only and local/private network destinations are blocked.

@@ -1,0 +1,59 @@
+ROYALOS FULL UPDATED PACKAGE — 2026-07-14
+
+This is a complete project package, not a repair overlay.
+
+It includes:
+
+- Cine and Michael P employee configuration
+- Persistent Ifeoluwa browser conversation history
+- Cine Video Studio
+- Michael P Records Center
+- Connections & Publishing Center
+- Social and company integration registry
+- Emmy publishing queue and approval preparation
+- Cine-to-Emmy production-plan handoff
+- Employee connection permission matrix
+- Updated RoyalOS roadmap, handoff, knowledge, and environment template
+
+RECOMMENDED CLEAN INSTALL
+
+1. Stop the running server with Ctrl + C.
+2. Keep your existing royalos-app folder or ZIP as a backup.
+3. Create a new empty folder:
+   C:\Users\godsg\Downloads\royalos-app
+4. Extract every file from this ZIP directly into that folder.
+5. Copy only your existing .env.local file from the backup into the new folder.
+   Also copy your approved local avatar files if they are not in this ZIP:
+   public\avatars\cine.jpg
+   public\avatars\michael-p.jpg
+   public\avatars\orion.jpg
+6. Open Command Prompt in the new royalos-app folder.
+7. Run:
+   npm install
+8. Then run:
+   npm run dev
+9. Open:
+   http://localhost:3000
+
+DO NOT extract only part of this ZIP.
+DO NOT place the project inside an extra nested royalos-app folder.
+DO NOT upload or share your .env.local file.
+DO NOT run npm audit fix --force without reviewing breaking changes.
+
+OPTIONAL CHECK
+
+Run this PowerShell command from the project root:
+
+powershell -ExecutionPolicy Bypass -File .\VERIFY_ROYALOS_FILES.ps1
+
+IMPORTANT CONNECTION NOTE
+
+The Connections Center is a secure Phase 3 foundation. It detects server-side configuration, shows permissions, prepares publishing work, and keeps a development activity log. It does not yet perform real OAuth authorization, encrypted token storage, live scheduling, or real publishing. Those require provider developer applications and provider-specific adapters.
+
+VALIDATION COMPLETED
+
+- npm install
+- npx tsc --noEmit
+- npm run build using safe temporary Supabase placeholders
+
+The production build completed successfully. The existing Orion Turbopack tracing warning remains and does not stop the build.

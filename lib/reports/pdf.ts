@@ -1,0 +1,217 @@
+import "server-only";
+
+const PAGE_WIDTH = 612;
+const PAGE_HEIGHT = 792;
+const LEFT_MARGIN = 54;
+const TOP_Y = 730;
+const BOTTOM_Y = 56;
+
+type PdfTextLine = {
+  text: string;
+  font: "F1" | "F2";
+  size: number;
+  spacingAfter: number;
+};
+
+export type RoyalOSCompanyPdfInput = {
+  title: string;
+  workspace: string;
+  employee: string;
+  content: string;
+  createdAt: string;
+  missionId?: string;
+  conversationId?: string;
+  sources?: string[];
+  tags?: string[];
+};
+
+function ascii(value: string): string {
+  return value
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/[—–]/g, "-")
+    .replace(/…/g, "...")
+    .replace(/[^\x20-\x7E\n\r\t]/g, "?");
+}
+
+function escapePdfText(value: string): string {
+  return ascii(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)");
+}
+
+function wrapLine(value: string, maxCharacters: number): string[] {
+  const cleaned = value.trim();
+  if (!cleaned) return [""];
+  const words = cleaned.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    if (!current) {
+      current = word;
+      continue;
+    }
+    if (`${current} ${word}`.length <= maxCharacters) {
+      current = `${current} ${word}`;
+    } else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+function makeLines(input: RoyalOSCompanyPdfInput): PdfTextLine[] {
+  const lines: PdfTextLine[] = [];
+  const addWrapped = (text: string, font: "F1" | "F2", size: number, spacingAfter: number, max = 90) => {
+    const wrapped = wrapLine(text, max);
+    wrapped.forEach((line, index) =>
+      lines.push({ text: line, font, size, spacingAfter: index === wrapped.length - 1 ? spacingAfter : 3 }),
+    );
+  };
+
+  addWrapped("ROYALOS COMPANY RECORD", "F2", 10, 10, 100);
+  addWrapped(input.title, "F2", 19, 14, 58);
+  addWrapped(`Workspace: ${input.workspace}`, "F1", 10, 3);
+  addWrapped(`Prepared by: ${input.employee}`, "F1", 10, 3);
+  addWrapped(`Created: ${new Date(input.createdAt).toLocaleString("en-US")}`, "F1", 10, 3);
+  if (input.missionId) addWrapped(`Mission: ${input.missionId}`, "F1", 10, 3);
+  if (input.conversationId) addWrapped(`Conversation: ${input.conversationId}`, "F1", 10, 3);
+  if (input.tags?.length) addWrapped(`Tags: ${input.tags.join(", ")}`, "F1", 10, 12);
+  lines.push({ text: "", font: "F1", size: 10, spacingAfter: 6 });
+
+  const paragraphs = input.content.replace(/\r\n?/g, "\n").split("\n");
+  for (const paragraph of paragraphs) {
+    const trimmed = paragraph.trim();
+    if (!trimmed) {
+      lines.push({ text: "", font: "F1", size: 10.5, spacingAfter: 8 });
+      continue;
+    }
+
+    const heading = trimmed.match(/^#{1,4}\s+(.+)$/);
+    if (heading) {
+      addWrapped(heading[1], "F2", 13, 8, 76);
+      continue;
+    }
+
+    const bullet = trimmed.match(/^[-*•]\s+(.+)$/);
+    if (bullet) {
+      addWrapped(`- ${bullet[1]}`, "F1", 10.5, 5, 88);
+      continue;
+    }
+
+    addWrapped(trimmed, "F1", 10.5, 7, 90);
+  }
+
+  if (input.sources?.length) {
+    lines.push({ text: "", font: "F1", size: 10, spacingAfter: 10 });
+    addWrapped("Sources", "F2", 13, 8, 80);
+    input.sources.forEach((source, index) => addWrapped(`${index + 1}. ${source}`, "F1", 9.5, 5, 96));
+  }
+
+  return lines;
+}
+
+function paginate(lines: PdfTextLine[]): PdfTextLine[][] {
+  const pages: PdfTextLine[][] = [];
+  let page: PdfTextLine[] = [];
+  let y = TOP_Y;
+
+  for (const line of lines) {
+    const lineHeight = line.size * 1.25 + line.spacingAfter;
+    if (page.length > 0 && y - lineHeight < BOTTOM_Y) {
+      pages.push(page);
+      page = [];
+      y = TOP_Y;
+    }
+    page.push(line);
+    y -= lineHeight;
+  }
+
+  if (page.length || pages.length === 0) pages.push(page);
+  return pages;
+}
+
+function createPageStream(lines: PdfTextLine[], pageNumber: number, totalPages: number): string {
+  const operations: string[] = [];
+  operations.push("q");
+  operations.push("0.12 0.16 0.22 rg");
+  operations.push(`0 ${PAGE_HEIGHT - 42} ${PAGE_WIDTH} 42 re f`);
+  operations.push("Q");
+  operations.push("BT");
+  operations.push("/F2 9 Tf");
+  operations.push("1 1 1 rg");
+  operations.push(`${LEFT_MARGIN} ${PAGE_HEIGHT - 27} Td`);
+  operations.push("(RoyalOS | Official Company Record) Tj");
+  operations.push("ET");
+
+  let y = TOP_Y;
+  for (const line of lines) {
+    operations.push("BT");
+    operations.push(`/${line.font} ${line.size.toFixed(1)} Tf`);
+    operations.push("0.08 0.10 0.14 rg");
+    operations.push(`${LEFT_MARGIN} ${y.toFixed(1)} Td`);
+    operations.push(`(${escapePdfText(line.text)}) Tj`);
+    operations.push("ET");
+    y -= line.size * 1.25 + line.spacingAfter;
+  }
+
+  operations.push("BT");
+  operations.push("/F1 8 Tf");
+  operations.push("0.35 0.38 0.43 rg");
+  operations.push(`${LEFT_MARGIN} 30 Td`);
+  operations.push(`(Generated by RoyalOS - Page ${pageNumber} of ${totalPages}) Tj`);
+  operations.push("ET");
+  return operations.join("\n");
+}
+
+export function buildRoyalOSCompanyPdf(input: RoyalOSCompanyPdfInput): Uint8Array {
+  const pages = paginate(makeLines(input));
+  const objects: string[] = [];
+  const addObject = (value: string): number => {
+    objects.push(value);
+    return objects.length;
+  };
+
+  const catalogId = addObject("");
+  const pagesId = addObject("");
+  const regularFontId = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  const boldFontId = addObject("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+  const pageIds: number[] = [];
+
+  pages.forEach((pageLines, index) => {
+    const stream = createPageStream(pageLines, index + 1, pages.length);
+    const streamLength = Buffer.byteLength(stream, "ascii");
+    const contentId = addObject(`<< /Length ${streamLength} >>\nstream\n${stream}\nendstream`);
+    const pageId = addObject(
+      `<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}] /Resources << /Font << /F1 ${regularFontId} 0 R /F2 ${boldFontId} 0 R >> >> /Contents ${contentId} 0 R >>`,
+    );
+    pageIds.push(pageId);
+  });
+
+  objects[catalogId - 1] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
+  objects[pagesId - 1] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
+
+  const header = "%PDF-1.4\n%RoyalOS\n";
+  const chunks: Buffer[] = [Buffer.from(header, "ascii")];
+  const offsets: number[] = [0];
+  let byteOffset = Buffer.byteLength(header, "ascii");
+
+  objects.forEach((object, index) => {
+    offsets.push(byteOffset);
+    const chunk = Buffer.from(`${index + 1} 0 obj\n${object}\nendobj\n`, "ascii");
+    chunks.push(chunk);
+    byteOffset += chunk.length;
+  });
+
+  const xrefOffset = byteOffset;
+  let xref = `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  offsets.slice(1).forEach((offset) => {
+    xref += `${offset.toString().padStart(10, "0")} 00000 n \n`;
+  });
+  const trailer = `trailer\n<< /Size ${objects.length + 1} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+  chunks.push(Buffer.from(`${xref}${trailer}`, "ascii"));
+  return new Uint8Array(Buffer.concat(chunks));
+}

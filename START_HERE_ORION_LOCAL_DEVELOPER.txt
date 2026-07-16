@@ -1,0 +1,44 @@
+ROYALOS ORION LOCAL DEVELOPER EDITION — START HERE
+Updated: 2026-07-14
+
+CLEAN INSTALLATION
+
+1. Stop the current RoyalOS server with Ctrl+C.
+2. Back up the current working royalos-app folder.
+3. Extract this ZIP into a NEW EMPTY folder named royalos-app.
+4. Copy your private .env.local from the backup into the new folder.
+   Never upload, share, or commit .env.local.
+5. Copy any local avatar images that are not already in the ZIP.
+6. Open Command Prompt or PowerShell in the new royalos-app folder.
+7. Run:
+
+   npm install
+   npm run dev
+
+8. Open http://localhost:3000
+
+ORION
+
+Open Orion Developer Workbench. The three areas are:
+- Inspect · Search · Plan
+- Code Proposal
+- Execute · Validate · History
+
+Orion requires exact CEO approval before changing files. Review every affected file and type APPROVE only when the proposal is correct. Use ROLLBACK to restore a completed transaction.
+
+SAFE VALIDATION COMMANDS
+
+- npx tsc --noEmit
+- npm run lint
+- npm run build
+
+COMPANY PDF RECORDS
+
+Use Save as Company PDF on substantial Ifeoluwa answers and executive briefings. Official records are visible in Michael P Records Center. Without Supabase configuration, development records are stored locally.
+
+IMPORTANT
+
+- Keep .env.local private.
+- Do not copy node_modules or .next from an older build.
+- Orion does not install packages or deploy production.
+- Git branch, commit, and pull-request automation comes after this local edition is moved to Git.

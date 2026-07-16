@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "royalos.authentication-pro.uploadable",
+  "name": "Authentication Pro - Uploadable Test",
+  "version": "1.0.0",
+  "description": "Uploadable RoyalOS authentication test plugin for OAuth, MFA, sessions, access reviews, and identity audit planning.",
+  "author": "RoyalOS",
+  "category": "Authentication",
+  "royalosVersion": ">=3.0.0",
+  "permissions": ["security:read", "security:write", "integrations:read"],
+  "capabilities": ["OAuth readiness", "MFA readiness", "Session review", "Role templates", "Identity audit"],
+  "assignedEmployees": ["Sentinel", "Orion"],
+  "requiredEnvironment": ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+  "actions": [{
+    "id": "audit-authentication",
+    "label": "Audit authentication",
+    "kind": "report",
+    "employee": "Sentinel",
+    "promptTemplate": "Audit authentication, MFA, OAuth, sessions, roles, recovery, and least privilege for: {{input}}"
+  }],
+  "tags": ["authentication", "oauth", "mfa", "free"]
+}

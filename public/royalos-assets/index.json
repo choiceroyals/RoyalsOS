@@ -1,0 +1,72 @@
+[
+  {
+    "id": "631e2031-3718-4195-b34f-b7ad887d03e4",
+    "title": "Nova Reference Image",
+    "fileName": "1784172772311-nova-reference-image.png",
+    "originalFileName": "1784172772311-nova-reference-image.png",
+    "kind": "image",
+    "source": "generated",
+    "mimeType": "image/png",
+    "sizeBytes": 1314610,
+    "publicUrl": "/royalos-assets/generated/1784172772311-nova-reference-image.png",
+    "relativePath": "/royalos-assets/generated/1784172772311-nova-reference-image.png",
+    "prompt": "use it to make a fly design",
+    "createdAt": "2026-07-16T03:32:52.316Z"
+  },
+  {
+    "id": "f1bc6b72-7dcd-4482-ae86-1e3bde660336",
+    "title": "Nova reference - XG social dep.png",
+    "fileName": "1784172590757-nova-reference-xg-social-dep-png.png",
+    "originalFileName": "XG social dep.png",
+    "kind": "image",
+    "source": "upload",
+    "mimeType": "image/png",
+    "sizeBytes": 1285838,
+    "publicUrl": "/royalos-assets/uploads/1784172590757-nova-reference-xg-social-dep-png.png",
+    "relativePath": "/royalos-assets/uploads/1784172590757-nova-reference-xg-social-dep-png.png",
+    "prompt": null,
+    "createdAt": "2026-07-16T03:29:50.762Z"
+  },
+  {
+    "id": "a9aad1c9-2582-48f8-ae7e-36c8de630b8e",
+    "title": "USE Xena grace knowledge you have to make a premuim picture for an awareness and publicity",
+    "fileName": "1784171684283-use-xena-grace-knowledge-you-have-to-make-a-premuim-picture-for-an-awareness-and.png",
+    "originalFileName": "1784171684283-use-xena-grace-knowledge-you-have-to-make-a-premuim-picture-for-an-awareness-and.png",
+    "kind": "image",
+    "source": "generated",
+    "mimeType": "image/png",
+    "sizeBytes": 1580815,
+    "publicUrl": "/royalos-assets/generated/1784171684283-use-xena-grace-knowledge-you-have-to-make-a-premuim-picture-for-an-awareness-and.png",
+    "relativePath": "/royalos-assets/generated/1784171684283-use-xena-grace-knowledge-you-have-to-make-a-premuim-picture-for-an-awareness-and.png",
+    "prompt": "Create a polished, professional image for the ChoiceRoyals workspace.\n\nPrimary creative request:\nUSE Xena grace knowledge you have to make a premuim picture for an awareness and publicity\n\nIntended purpose:\ngeneral\n\nDo not add unnecessary words, random letters, logos, watermarks, signatures, or placeholder text.\n\nProduce a finished commercial-quality image with strong composition, clear visual hierarchy, realistic lighting or intentional illustration quality, and no obvious AI-generation defects.",
+    "createdAt": "2026-07-16T03:14:44.289Z"
+  },
+  {
+    "id": "28590e87-ddf7-47d9-bee1-8c7b76c95bc0",
+    "title": "Nova reference - Luxurious XG app-logo.png",
+    "fileName": "1784171491376-nova-reference-luxurious-xg-app-logo-png.png",
+    "originalFileName": "Luxurious XG app-logo.png",
+    "kind": "image",
+    "source": "upload",
+    "mimeType": "image/png",
+    "sizeBytes": 1877144,
+    "publicUrl": "/royalos-assets/uploads/1784171491376-nova-reference-luxurious-xg-app-logo-png.png",
+    "relativePath": "/royalos-assets/uploads/1784171491376-nova-reference-luxurious-xg-app-logo-png.png",
+    "prompt": null,
+    "createdAt": "2026-07-16T03:11:31.380Z"
+  },
+  {
+    "id": "1cc3e621-26d5-41ec-a173-4258aaaad362",
+    "title": "Nova reference - Luxurious XG app-logo.png",
+    "fileName": "1784171474158-nova-reference-luxurious-xg-app-logo-png.png",
+    "originalFileName": "Luxurious XG app-logo.png",
+    "kind": "image",
+    "source": "upload",
+    "mimeType": "image/png",
+    "sizeBytes": 1877144,
+    "publicUrl": "/royalos-assets/uploads/1784171474158-nova-reference-luxurious-xg-app-logo-png.png",
+    "relativePath": "/royalos-assets/uploads/1784171474158-nova-reference-luxurious-xg-app-logo-png.png",
+    "prompt": null,
+    "createdAt": "2026-07-16T03:11:14.166Z"
+  }
+]

@@ -1,0 +1,27 @@
+.shell{display:grid;gap:16px}.hero,.panel{border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(145deg,rgba(17,24,36,.98),rgba(8,13,21,.98));box-shadow:0 22px 60px rgba(0,0,0,.18)}.hero{padding:22px;display:flex;align-items:center;justify-content:space-between;gap:16px}.hero h1,.panel h2,.card h3{margin:0}.hero p,.muted{color:#96a2b5;line-height:1.55}.badge{padding:8px 12px;border-radius:999px;color:#f4d98f;background:rgba(214,157,45,.12);font-size:12px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tabs button,.button,.secondary,.danger{border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 13px;background:rgba(255,255,255,.04);color:#dbe2ec;cursor:pointer}.tabs .active,.button{background:#f3c557;color:#181109;font-weight:800;border-color:transparent}.panel{padding:18px;display:grid;gap:14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}.card{border:1px solid rgba(255,255,255,.08);border-radius:15px;padding:15px;background:rgba(255,255,255,.025);display:grid;gap:11px}.cardTop{display:flex;justify-content:space-between;gap:12px}.category{font-size:11px;color:#e7bd62;text-transform:uppercase;letter-spacing:.08em}.health{font-size:11px;padding:5px 8px;border-radius:999px;background:rgba(82,202,132,.12);color:#8ce5ac}.setup{background:rgba(240,179,54,.12);color:#f6cc78}.disabled{background:rgba(255,255,255,.08);color:#9da6b5}.capabilities,.permissions{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;padding:6px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.09);color:#bcc5d2}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{color:#ffb4af;border-color:rgba(255,100,100,.25)}.upload{display:grid;gap:12px;max-width:720px}.upload input{padding:14px;border-radius:12px;border:1px dashed rgba(244,198,87,.35);background:rgba(244,198,87,.05);color:white}.notice,.error{padding:12px;border-radius:12px}.notice{background:rgba(68,170,111,.1);color:#a6ebbf}.error{background:rgba(226,78,78,.1);color:#ffb0ac}.manifestExample{white-space:pre-wrap;background:#0b111a;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;color:#cbd3df;font-size:12px;overflow:auto}@media(max-width:700px){.hero{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}}
+
+.pluginActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.3rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 218, 128, 0.14);
+}
+
+.output {
+  border: 1px solid rgba(100, 225, 175, 0.35);
+  background: rgba(15, 55, 45, 0.32);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.output pre {
+  margin: 0.65rem 0 0;
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: inherit;
+}
+.search{width:100%;margin-top:12px;border:1px solid rgba(231,184,79,.32);border-radius:12px;background:rgba(255,255,255,.04);color:inherit;padding:12px 14px}
