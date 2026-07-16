@@ -2,7 +2,7 @@ import { applyRoyalOSOrionProposal } from "@/lib/developer/executor";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 600;
+export const maxDuration = 300;
 
 function text(value: unknown, max = 10_000): string {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
