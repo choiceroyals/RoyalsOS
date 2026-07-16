@@ -1,0 +1,13 @@
+ROYALOS V3.2 CLOUD EDITION
+
+1. Back up the current RoyalOS project.
+2. Extract this package into a new empty folder.
+3. Copy your private .env.local into the project.
+4. For local use set ROYALOS_STORAGE_DRIVER=local.
+5. In Vercel set ROYALOS_STORAGE_DRIVER=supabase and ROYALOS_STORAGE_BUCKET=royalos-private.
+6. Confirm SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY exist in Vercel.
+7. Run npm install --registry=https://registry.npmjs.org/
+8. Run npx tsc --noEmit and npm run build.
+9. Commit and push to the deployed Git branch.
+
+Do not copy node_modules or .next from an older project.

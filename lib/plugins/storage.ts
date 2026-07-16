@@ -3,6 +3,7 @@ import "server-only";
 import { createHash } from "crypto";
 import fs from "fs/promises";
 import path from "path";
+import { deleteRoyalOSFiles, readRoyalOSJson, usesSupabaseStorage, writeRoyalOSFile, writeRoyalOSJson } from "@/lib/storage/royalosStorage";
 import AdmZip from "adm-zip";
 
 import { ROYALOS_PLUGIN_CATALOG } from "./catalog";
@@ -12,6 +13,8 @@ import type { InstalledRoyalOSPlugin, RoyalOSPluginManifest } from "./types";
 const ROOT = path.join(process.cwd(), "data", "plugins");
 const PACKAGES = path.join(ROOT, "packages");
 const REGISTRY = path.join(ROOT, "registry.json");
+const CLOUD_REGISTRY = "plugin-packages/registry.json";
+const CLOUD_PACKAGES = "plugin-packages/packages";
 const MAX_ZIP_BYTES = 25 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = new Set([".json", ".md", ".txt", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".css", ".html"]);
 
@@ -44,6 +47,7 @@ async function marketplaceCatalog(): Promise<RoyalOSPluginManifest[]> {
 }
 
 async function ensureStorage() {
+  if (usesSupabaseStorage()) return;
   await fs.mkdir(PACKAGES, { recursive: true });
   try {
     await fs.access(REGISTRY);
@@ -60,7 +64,25 @@ async function ensureStorage() {
   }
 }
 
+function seededPlugins(): InstalledRoyalOSPlugin[] {
+  const now = new Date().toISOString();
+  return ROYALOS_PLUGIN_CATALOG.map((manifest) => ({
+    manifest,
+    enabled: true,
+    source: "marketplace",
+    installedAt: now,
+    updatedAt: now,
+  }));
+}
+
 export async function readInstalledPlugins(): Promise<InstalledRoyalOSPlugin[]> {
+  if (usesSupabaseStorage()) {
+    const stored = await readRoyalOSJson<InstalledRoyalOSPlugin[]>(CLOUD_REGISTRY, []);
+    if (Array.isArray(stored) && stored.length) return stored;
+    const seeded = seededPlugins();
+    await writeRoyalOSJson(CLOUD_REGISTRY, seeded);
+    return seeded;
+  }
   await ensureStorage();
   try {
     const raw = JSON.parse(await fs.readFile(REGISTRY, "utf8")) as InstalledRoyalOSPlugin[];
@@ -69,6 +91,10 @@ export async function readInstalledPlugins(): Promise<InstalledRoyalOSPlugin[]> 
 }
 
 async function writeInstalledPlugins(plugins: InstalledRoyalOSPlugin[]) {
+  if (usesSupabaseStorage()) {
+    await writeRoyalOSJson(CLOUD_REGISTRY, plugins);
+    return;
+  }
   await ensureStorage();
   const temp = `${REGISTRY}.tmp`;
   await fs.writeFile(temp, JSON.stringify(plugins, null, 2), "utf8");
@@ -129,8 +155,12 @@ export async function uninstallPlugin(id: string) {
   const target = installed.find((plugin) => plugin.manifest.id === id);
   if (!target) throw new Error("Installed plugin was not found.");
   if (target.packagePath) {
-    const full = path.resolve(process.cwd(), target.packagePath);
-    if (full.startsWith(path.resolve(PACKAGES))) await fs.rm(full, { recursive: true, force: true });
+    if (usesSupabaseStorage()) {
+      await deleteRoyalOSFiles([target.packagePath]);
+    } else {
+      const full = path.resolve(process.cwd(), target.packagePath);
+      if (full.startsWith(path.resolve(PACKAGES))) await fs.rm(full, { recursive: true, force: true });
+    }
   }
   await writeInstalledPlugins(installed.filter((plugin) => plugin.manifest.id !== id));
 }
@@ -165,17 +195,24 @@ export async function installUploadedPlugin(bytes: Buffer): Promise<InstalledRoy
   }
   const installed = await readInstalledPlugins();
   if (installed.some((plugin) => plugin.manifest.id === manifest.id)) throw new Error("A plugin with this ID is already installed. Uninstall it before uploading a replacement.");
-  const target = path.join(PACKAGES, manifest.id);
-  await fs.rm(target, { recursive: true, force: true });
-  await fs.mkdir(target, { recursive: true });
-  for (const entry of zip.getEntries()) {
-    if (entry.isDirectory) continue;
-    const relative = entry.entryName.slice(manifestDir.length);
-    const destination = path.join(target, relative);
-    const resolved = path.resolve(destination);
-    if (!resolved.startsWith(path.resolve(target))) throw new Error("Unsafe plugin extraction path.");
-    await fs.mkdir(path.dirname(destination), { recursive: true });
-    await fs.writeFile(destination, entry.getData());
+  let packagePath: string;
+  if (usesSupabaseStorage()) {
+    packagePath = `${CLOUD_PACKAGES}/${manifest.id}/${manifest.version}-${checksum.slice(0, 12)}.zip`;
+    await writeRoyalOSFile({ path: packagePath, data: bytes, contentType: "application/zip", overwrite: true });
+  } else {
+    const target = path.join(PACKAGES, manifest.id);
+    await fs.rm(target, { recursive: true, force: true });
+    await fs.mkdir(target, { recursive: true });
+    for (const entry of zip.getEntries()) {
+      if (entry.isDirectory) continue;
+      const relative = entry.entryName.slice(manifestDir.length);
+      const destination = path.join(target, relative);
+      const resolved = path.resolve(destination);
+      if (!resolved.startsWith(path.resolve(target))) throw new Error("Unsafe plugin extraction path.");
+      await fs.mkdir(path.dirname(destination), { recursive: true });
+      await fs.writeFile(destination, entry.getData());
+    }
+    packagePath = path.relative(process.cwd(), target);
   }
   const now = new Date().toISOString();
   const plugin: InstalledRoyalOSPlugin = {
@@ -184,7 +221,7 @@ export async function installUploadedPlugin(bytes: Buffer): Promise<InstalledRoy
     source: "upload",
     installedAt: now,
     updatedAt: now,
-    packagePath: path.relative(process.cwd(), target),
+    packagePath,
     checksum,
   };
   plugin.lastHealthCheck = pluginHealth(plugin);

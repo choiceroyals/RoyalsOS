@@ -7,6 +7,7 @@ import { randomUUID } from "node:crypto";
 import { buildRoyalOSCompanyPdf, type RoyalOSCompanyPdfInput } from "@/lib/reports/pdf";
 import { isRoyalOSToolsSupabaseConfigured, getRoyalOSToolsSupabaseClient } from "@/lib/tools/supabase";
 import type { RoyalOSWorkspace } from "@/lib/missions/types";
+import { createRoyalOSSignedUrl, readRoyalOSJson, usesSupabaseStorage, writeRoyalOSFile, writeRoyalOSJson } from "@/lib/storage/royalosStorage";
 
 export type RoyalOSCompanyRecord = {
   recordId: string;
@@ -105,6 +106,13 @@ async function saveLocally(input: {
   return record;
 }
 
+async function appendCloudIndex(record: RoyalOSCompanyRecord): Promise<void> {
+  const index = "company-records/index.json";
+  const records = await readRoyalOSJson<RoyalOSCompanyRecord[]>(index, []);
+  const next = [record, ...records.filter((item) => item.recordId !== record.recordId)].slice(0, 5000);
+  await writeRoyalOSJson(index, next);
+}
+
 async function saveToSupabase(input: {
   recordId: string;
   fileName: string;
@@ -119,28 +127,13 @@ async function saveToSupabase(input: {
   sources: string[];
   createdAt: string;
 }): Promise<RoyalOSCompanyRecord> {
-  const supabase = getRoyalOSToolsSupabaseClient();
-  const bucket = process.env.ROYALOS_ASSET_BUCKET?.trim() || process.env.SUPABASE_ASSETS_BUCKET?.trim() || "royalos-assets";
   const basePath = `company-records/${slug(input.workspace)}/${input.createdAt.slice(0, 10)}/${input.recordId}`;
   const pdfPath = `${basePath}/${input.fileName}`;
   const originalPath = `${basePath}/${input.fileName.replace(/\.pdf$/i, ".json")}`;
 
-  const pdfUpload = await supabase.storage.from(bucket).upload(pdfPath, input.pdf, {
-    contentType: "application/pdf",
-    upsert: false,
-    cacheControl: "3600",
-  });
-  if (pdfUpload.error) throw new Error(pdfUpload.error.message);
-
-  const originalUpload = await supabase.storage.from(bucket).upload(
-    originalPath,
-    new Blob([JSON.stringify(input.original, null, 2)], { type: "application/json" }),
-    { contentType: "application/json", upsert: false, cacheControl: "3600" },
-  );
-  if (originalUpload.error) throw new Error(originalUpload.error.message);
-
-  const signed = await supabase.storage.from(bucket).createSignedUrl(pdfPath, 60 * 60 * 24 * 7);
-  if (signed.error) throw new Error(signed.error.message);
+  await writeRoyalOSFile({ path: pdfPath, data: input.pdf, contentType: "application/pdf", overwrite: false });
+  await writeRoyalOSFile({ path: originalPath, data: JSON.stringify(input.original, null, 2), contentType: "application/json", overwrite: false });
+  const url = await createRoyalOSSignedUrl(pdfPath, 60 * 60 * 24 * 7);
 
   const record: RoyalOSCompanyRecord = {
     recordId: input.recordId,
@@ -154,39 +147,39 @@ async function saveToSupabase(input: {
     storageMode: "supabase",
     storagePath: pdfPath,
     originalStoragePath: originalPath,
-    url: signed.data.signedUrl,
+    url,
     createdAt: input.createdAt,
     sizeBytes: input.pdf.byteLength,
     version: 1,
   };
+  await appendCloudIndex(record);
 
-  const databaseInsert = await supabase.from("royalos_company_records").insert({
-    record_id: input.recordId,
-    workspace: input.workspace,
-    title: input.title,
-    employee: input.employee,
-    mission_id: input.missionId ?? null,
-    conversation_id: input.conversationId ?? null,
-    version: 1,
-    storage_bucket: bucket,
-    storage_path: pdfPath,
-    original_storage_path: originalPath,
-    mime_type: "application/pdf",
-    size_bytes: input.pdf.byteLength,
-    tags: input.tags,
-    sources: input.sources,
-    metadata: {
-      generatedBy: "RoyalOS Save as Company PDF",
-      signedUrlExpiresInSeconds: 604800,
-    },
-  });
-
-  if (databaseInsert.error) {
-    throw new Error(
-      `PDF storage succeeded but the company database record could not be created: ${databaseInsert.error.message}. Apply 20260714_orion_company_records.sql.`,
-    );
+  if (isRoyalOSToolsSupabaseConfigured()) {
+    try {
+      const supabase = getRoyalOSToolsSupabaseClient();
+      const bucket = process.env.ROYALOS_STORAGE_BUCKET?.trim() || "royalos-private";
+      const databaseInsert = await supabase.from("royalos_company_records").insert({
+        record_id: input.recordId,
+        workspace: input.workspace,
+        title: input.title,
+        employee: input.employee,
+        mission_id: input.missionId ?? null,
+        conversation_id: input.conversationId ?? null,
+        version: 1,
+        storage_bucket: bucket,
+        storage_path: pdfPath,
+        original_storage_path: originalPath,
+        mime_type: "application/pdf",
+        size_bytes: input.pdf.byteLength,
+        tags: input.tags,
+        sources: input.sources,
+        metadata: { generatedBy: "RoyalOS Save as Company PDF" },
+      });
+      if (databaseInsert.error) console.warn("RoyalOS company-record database row was not created; cloud index remains available.", databaseInsert.error);
+    } catch (error) {
+      console.warn("RoyalOS company-record database insert failed; cloud index remains available.", error);
+    }
   }
-
   return record;
 }
 
@@ -233,14 +226,7 @@ export async function createRoyalOSCompanyRecord(input: {
     createdAt,
   };
 
-  if (isRoyalOSToolsSupabaseConfigured()) {
-    try {
-      return await saveToSupabase(values);
-    } catch (error) {
-      console.warn("RoyalOS company PDF Supabase storage failed; using local fallback.", error);
-    }
-  }
-
+  if (usesSupabaseStorage()) return saveToSupabase(values);
   return saveLocally(values);
 }
 
@@ -256,6 +242,15 @@ export async function listRoyalOSLocalCompanyRecords(limit = 100): Promise<Royal
 
 export async function listRoyalOSCompanyRecords(limit = 100): Promise<RoyalOSCompanyRecord[]> {
   const safeLimit = Math.max(1, Math.min(limit, 500));
+  if (usesSupabaseStorage()) {
+    const indexed = await readRoyalOSJson<RoyalOSCompanyRecord[]>("company-records/index.json", []);
+    const refreshed: RoyalOSCompanyRecord[] = [];
+    for (const record of indexed.slice(0, safeLimit)) {
+      try { refreshed.push({ ...record, url: await createRoyalOSSignedUrl(record.storagePath, 3600) }); }
+      catch { refreshed.push(record); }
+    }
+    return refreshed;
+  }
   if (isRoyalOSToolsSupabaseConfigured()) {
     try {
       const supabase = getRoyalOSToolsSupabaseClient();

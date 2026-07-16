@@ -11,6 +11,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
+import { readRoyalOSJson, usesSupabaseStorage, writeRoyalOSJson } from "@/lib/storage/royalosStorage";
 import type {
   RestorePoint,
   SystemCheck,
@@ -43,6 +44,7 @@ async function exists(target: string): Promise<boolean> {
 }
 
 async function ensureSystemDirectories(): Promise<void> {
+  if (usesSupabaseStorage()) return;
   await Promise.all([
     mkdir(systemPath("backups"), { recursive: true }),
     mkdir(systemPath("reports"), { recursive: true }),
@@ -51,7 +53,12 @@ async function ensureSystemDirectories(): Promise<void> {
   ]);
 }
 
+function cloudSystemPath(file: string): string {
+  return `system-care/${path.basename(file)}`;
+}
+
 async function readJsonArray<T>(file: string): Promise<T[]> {
+  if (usesSupabaseStorage()) return readRoyalOSJson<T[]>(cloudSystemPath(file), []);
   try {
     const raw = await readFile(file, "utf8");
     const parsed = JSON.parse(raw) as unknown;
@@ -62,6 +69,10 @@ async function readJsonArray<T>(file: string): Promise<T[]> {
 }
 
 async function writeJson(file: string, value: unknown): Promise<void> {
+  if (usesSupabaseStorage()) {
+    await writeRoyalOSJson(cloudSystemPath(file), value);
+    return;
+  }
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, JSON.stringify(value, null, 2), "utf8");
 }
@@ -112,6 +123,7 @@ async function packageInfo(): Promise<{ version: string; scripts: Record<string,
 }
 
 async function listRestorePoints(): Promise<RestorePoint[]> {
+  if (usesSupabaseStorage()) return [];
   await ensureSystemDirectories();
   const base = systemPath("backups");
   const entries = await readdir(base, { withFileTypes: true });
@@ -142,6 +154,7 @@ function check(
 
 export async function quickScan(): Promise<SystemCheck[]> {
   await ensureSystemDirectories();
+  const cloudMode = usesSupabaseStorage();
   const requiredFiles = [
     "package.json",
     "app/page.tsx",
@@ -169,15 +182,19 @@ export async function quickScan(): Promise<SystemCheck[]> {
     missing.length === 0
       ? check("files", "Core project files", "pass", "All required RoyalOS files are present.")
       : check("files", "Core project files", "fail", `Missing: ${missing.join(", ")}`, "Restore from the latest working package or assign the issue to Orion."),
-    nextInstalled
-      ? check("dependencies", "Node dependencies", "pass", "Next.js is installed locally.")
-      : check("dependencies", "Node dependencies", "fail", "node_modules/next is missing.", "Use Repair dependencies or run npm install."),
+    cloudMode
+      ? check("dependencies", "Cloud runtime", "pass", "Vercel manages the installed production dependencies.")
+      : nextInstalled
+        ? check("dependencies", "Node dependencies", "pass", "Next.js is installed locally.")
+        : check("dependencies", "Node dependencies", "fail", "node_modules/next is missing.", "Use Repair dependencies or run npm install."),
     pkg.scripts.dev && pkg.scripts.build && pkg.scripts.lint
       ? check("scripts", "Project scripts", "pass", "Development, build, and lint scripts are available.")
       : check("scripts", "Project scripts", "warning", "One or more expected npm scripts are missing.", "Review package.json with Orion."),
-    envFile
-      ? check("env", "Private environment file", "pass", ".env.local is present. Secret values were not inspected.")
-      : check("env", "Private environment file", "warning", ".env.local was not found.", "Copy your private .env.local into the RoyalOS project root."),
+    cloudMode
+      ? check("env", "Cloud environment", "pass", "RoyalOS is using deployment environment variables. Secret values were not inspected.")
+      : envFile
+        ? check("env", "Private environment file", "pass", ".env.local is present. Secret values were not inspected.")
+        : check("env", "Private environment file", "warning", ".env.local was not found.", "Copy your private .env.local into the RoyalOS project root."),
     openAiConfigured
       ? check("openai", "OpenAI connection", "pass", "OPENAI_API_KEY is available to the server.")
       : check("openai", "OpenAI connection", "warning", "OPENAI_API_KEY is not configured.", "Add OPENAI_API_KEY to .env.local and restart RoyalOS."),
@@ -242,6 +259,7 @@ async function countFiles(directory: string): Promise<number> {
 }
 
 async function createRestorePoint(): Promise<RestorePoint> {
+  if (usesSupabaseStorage()) throw new Error("Cloud restore points must be created from a Git commit or deployment snapshot. Use GitHub/Vercel rollback in production.");
   await ensureSystemDirectories();
   const id = `restore-${new Date().toISOString().replace(/[:.]/g, "-")}`;
   const destination = systemPath("backups", id);
@@ -274,6 +292,7 @@ async function createRestorePoint(): Promise<RestorePoint> {
 }
 
 async function restoreLast(): Promise<RestorePoint> {
+  if (usesSupabaseStorage()) throw new Error("Production rollback is managed through GitHub and Vercel deployments.");
   const points = await listRestorePoints();
   const latest = points[0];
   if (!latest) throw new Error("No restore point is available.");
@@ -318,23 +337,27 @@ export async function performMaintenanceAction(
     return { message: "Quick system scan completed.", checks };
   }
   if (action === "verify_code") {
+    if (usesSupabaseStorage()) throw new Error("Code verification is local-only. Run it through Orion before deployment or in CI.");
     const checks = await verifyCode();
     const failed = checks.some((item) => item.status === "fail");
     await appendMaintenanceLog({ action, status: failed ? "error" : "success", summary: failed ? "Code verification found errors." : "Code verification passed." });
     return { message: failed ? "Code verification found errors." : "Code verification passed.", checks };
   }
   if (action === "safe_repair") {
+    if (usesSupabaseStorage()) throw new Error("Cloud deployments are immutable. Redeploy the latest healthy Git commit instead of modifying production files.");
     await ensureSystemDirectories();
     await rm(path.join(root(), ".next", "cache"), { recursive: true, force: true });
     await appendMaintenanceLog({ action, status: "success", summary: "Safe repair completed.", detail: "Runtime directories were created and the Next.js cache was cleared. Restart RoyalOS if the current page is stale." });
     return { message: "Safe repair completed. Restart RoyalOS if the current page is stale." };
   }
   if (action === "clear_build_cache") {
+    if (usesSupabaseStorage()) throw new Error("Vercel build cache is managed from the Vercel deployment settings.");
     await rm(path.join(root(), ".next", "cache"), { recursive: true, force: true });
     await appendMaintenanceLog({ action, status: "success", summary: "Next.js cache cleared." });
     return { message: "Next.js cache cleared. Restart npm run dev." };
   }
   if (action === "repair_dependencies") {
+    if (usesSupabaseStorage()) throw new Error("Production dependencies are installed during deployment. Fix package.json locally and redeploy.");
     const result = await runCommand("npm", ["install"], 300_000);
     await appendMaintenanceLog({ action, status: result.ok ? "success" : "error", summary: result.ok ? "Dependencies repaired." : "Dependency repair failed.", detail: result.output.slice(-8000) });
     if (!result.ok) throw new Error(result.output.slice(-4000));
@@ -356,8 +379,9 @@ export async function performMaintenanceAction(
     const name = `system-report-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
     const target = systemPath("reports", name);
     await writeJson(target, snapshot);
-    await appendMaintenanceLog({ action, status: "success", summary: "System diagnostic report generated.", detail: path.relative(root(), target) });
-    return { message: "System report generated.", detail: path.relative(root(), target) };
+    const detail = usesSupabaseStorage() ? `system-care/${name}` : path.relative(root(), target);
+    await appendMaintenanceLog({ action, status: "success", summary: "System diagnostic report generated.", detail });
+    return { message: "System report generated.", detail };
   }
   throw new Error("Unsupported maintenance action.");
 }

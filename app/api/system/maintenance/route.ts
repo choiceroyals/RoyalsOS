@@ -24,15 +24,16 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    if (!isAllowedHost(request)) {
-      return NextResponse.json({ error: "System Care write actions are local-only. Set ROYALOS_ALLOW_REMOTE_SYSTEM_CARE=true only on a trusted private network." }, { status: 403 });
-    }
     const body = (await request.json()) as {
       action?: SystemMaintenanceAction;
       confirmation?: string;
     };
     if (!body.action) {
       return NextResponse.json({ error: "A maintenance action is required." }, { status: 400 });
+    }
+    const remotelySafe = new Set<SystemMaintenanceAction>(["quick_scan", "generate_report"]);
+    if (!isAllowedHost(request) && !remotelySafe.has(body.action)) {
+      return NextResponse.json({ error: "This System Care action changes local software files and is disabled on cloud deployments. Use Orion locally, GitHub, and Vercel redeployment." }, { status: 403 });
     }
     const result = await performMaintenanceAction(body.action, body.confirmation);
     return NextResponse.json({ ...result, snapshot: await inspectSystem() });
